@@ -1,5 +1,15 @@
 import pygame
 from sys import exit
+"""
+Content:
+|x| Vars,style,settings
+  |x| Game assets import
+  |x| Classes
+    |x| x class
+|x| Event loop
+  |x| fixed .blit assets
+  |x| logic .blit assets
+"""
 
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
