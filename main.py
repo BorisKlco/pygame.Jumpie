@@ -9,6 +9,8 @@ Content:
 |x| Event loop
   |x| fixed .blit assets
   |x| logic .blit assets
+
+VSTEST
 """
 
 pygame.init()
