@@ -7,6 +7,7 @@ def display_score():
     score = font.render(f'Score: {current_time_ms}', False, scoreColor)
     scoreBox = score.get_rect(center=(400, 50))
     screen.blit(score, scoreBox)
+    return current_time_ms
 
 
 pygame.init()
@@ -20,13 +21,14 @@ gameActive = False
 playerGrav = 0
 jumpCount = 0
 gameTime = 0
+finalScore = 0
 
 skySur = pygame.image.load("assets/Sky.png").convert()
 groundSur = pygame.image.load("assets/ground.png").convert()
 titleText = font.render('Jumpie!', False, scoreColor)
 titleTextBox = titleText.get_rect(center=(400, 75))
 instructionText = font.render('Smash  Space  for jump!', False, scoreColor)
-instructionTextBox = instructionText.get_rect(center=(400, 325))
+instructionTextBox = instructionText.get_rect(center=(400, 350))
 
 snailSur = pygame.image.load("assets/snail/snail1.png").convert_alpha()
 snailBox = snailSur.get_rect(bottomleft=(800, 300))
@@ -58,7 +60,7 @@ while True:
     if gameActive == True:
         screen.blit(skySur, (0, 0))
         screen.blit(groundSur, (0, 300))
-        display_score()
+        finalScore = display_score()
 
         snailBox.x -= 4
         if snailBox.right <= 0:
@@ -81,7 +83,15 @@ while True:
         screen.fill(mainColor)
         screen.blit(playerStand, playerStandBox)
         screen.blit(titleText, titleTextBox)
-        screen.blit(instructionText, instructionTextBox)
+        finalScoreText = font.render(f'Score: {finalScore}', False, scoreColor)
+        finalScoreBox = finalScoreText.get_rect(center=(400, 325))
+        if finalScore > 0:
+            instructionTextBox.y = 350
+            screen.blit(finalScoreText, finalScoreBox)
+            screen.blit(instructionText, instructionTextBox)
+        else:
+            instructionTextBox.y = 325
+            screen.blit(instructionText, instructionTextBox)
 
     pygame.display.update()
     clock.tick(60)
