@@ -1,5 +1,6 @@
 import pygame
 from sys import exit
+from random import randint
 
 
 def display_score():
@@ -8,6 +9,24 @@ def display_score():
     scoreBox = score.get_rect(center=(400, 50))
     screen.blit(score, scoreBox)
     return current_time_ms
+
+
+def enemyMovement(enemyList):
+    if enemyList:
+        for enemy in enemyList:
+            enemy.x -= 4
+
+            if enemy.bottom == 175:
+                screen.blit(flySur, enemy)
+            else:
+                screen.blit(snailSur, enemy)
+
+        enemyList = [
+            seenEnemy for seenEnemy in enemyList if seenEnemy.right > 0
+        ]
+        return enemyList
+    else:
+        return []
 
 
 pygame.init()
@@ -31,7 +50,9 @@ instructionText = font.render('Smash  Space  for jump!', False, scoreColor)
 instructionTextBox = instructionText.get_rect(center=(400, 350))
 
 snailSur = pygame.image.load("assets/snail/snail1.png").convert_alpha()
-snailBox = snailSur.get_rect(bottomleft=(800, 300))
+flySur = pygame.image.load("assets/fly/Fly1.png").convert_alpha()
+
+enemyList = []
 
 playerSur = pygame.image.load(
     "assets/player/player_walk_1.png").convert_alpha()
@@ -40,6 +61,9 @@ playerStand = pygame.image.load(
     'assets/player/player_stand.png').convert_alpha()
 playerStand = pygame.transform.rotozoom(playerStand, 0, 2)
 playerStandBox = playerStand.get_rect(center=(400, 200))
+
+customEventTimer = pygame.USEREVENT + 1
+pygame.time.set_timer(customEventTimer, 2000)
 
 while True:
     for event in pygame.event.get():
@@ -50,24 +74,33 @@ while True:
             if gameActive == True:
                 if jumpCount < 2:
                     if event.key == pygame.K_SPACE:
-                        playerGrav = -4
+                        playerGrav = -5
                         jumpCount += 1
             else:
                 if event.key == pygame.K_SPACE:
                     gameActive = True
                     gameTime = int(pygame.time.get_ticks() / 500)
 
+        if event.type == customEventTimer and gameActive == True:
+            if randint(0, 2):
+                enemyList.append(
+                    snailSur.get_rect(bottomleft=(randint(800, 1100), 300)))
+            else:
+                enemyList.append(
+                    flySur.get_rect(bottomleft=(randint(1200, 1600), 175)))
+
     if gameActive == True:
         screen.blit(skySur, (0, 0))
         screen.blit(groundSur, (0, 300))
         finalScore = display_score()
+        enemyList = enemyMovement(enemyList)
 
-        snailBox.x -= 4
-        if snailBox.right <= 0:
-            snailBox.left = 800
-        screen.blit(snailSur, snailBox)
+        #     snailBox.x -= 4
+        #    if snailBox.right <= 0:
+        #         snailBox.left = 800
+        #      screen.blit(snailSur, snailBox)
 
-        playerGrav += 0.20
+        playerGrav += 0.25
         playerBox.y += playerGrav
         if playerBox.bottom >= 300:
             playerGrav = 0
@@ -75,10 +108,11 @@ while True:
             playerBox.bottom = 300
         screen.blit(playerSur, playerBox)
 
-        if snailBox.colliderect(playerBox):
-            gameActive = False
-            snailBox.left = 800
-            playerBox.bottom = 300
+    #   if snailBox.colliderect(playerBox):
+    #       gameActive = False
+    #       snailBox.left = 800
+    #       playerBox.bottom = 300
+
     else:
         screen.fill(mainColor)
         screen.blit(playerStand, playerStandBox)
