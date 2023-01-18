@@ -5,7 +5,7 @@ from random import randint
 
 def display_score():
     current_time_ms = int(pygame.time.get_ticks() / 500) - gameTime
-    score = font.render(f'Score: {current_time_ms}', False, scoreColor)
+    score = font.render(f"Score: {current_time_ms}", False, scoreColor)
     scoreBox = score.get_rect(center=(400, 50))
     screen.blit(score, scoreBox)
     return current_time_ms
@@ -14,16 +14,15 @@ def display_score():
 def enemyMovement(enemyList):
     if enemyList:
         for enemy in enemyList:
-            enemy.x -= 4
 
             if enemy.bottom == 175:
+                enemy.x -= randint(5, 6)
                 screen.blit(flySur, enemy)
             else:
+                enemy.x -= randint(2, 4)
                 screen.blit(snailSur, enemy)
 
-        enemyList = [
-            seenEnemy for seenEnemy in enemyList if seenEnemy.right > 0
-        ]
+        enemyList = [seenEnemy for seenEnemy in enemyList if seenEnemy.right > 0]
         return enemyList
     else:
         return []
@@ -64,9 +63,9 @@ enemyList = []
 
 skySur = pygame.image.load("assets/Sky.png").convert()
 groundSur = pygame.image.load("assets/ground.png").convert()
-titleText = font.render('Jumpie!', False, scoreColor)
+titleText = font.render("Jumpie!", False, scoreColor)
 titleTextBox = titleText.get_rect(center=(400, 75))
-instructionText = font.render('Smash  Space  for jump!', False, scoreColor)
+instructionText = font.render("Smash  Space  for jump!", False, scoreColor)
 instructionTextBox = instructionText.get_rect(center=(400, 350))
 
 snailFrame_1 = pygame.image.load("assets/snail/snail1.png").convert_alpha()
@@ -81,18 +80,15 @@ flyFrame = [flyFrame_1, flyFrame_2]
 flyFrameIndex = 0
 flySur = flyFrame[flyFrameIndex]
 
-playerWalk_1 = pygame.image.load(
-    "assets/player/player_walk_1.png").convert_alpha()
-playerWalk_2 = pygame.image.load(
-    "assets/player/player_walk_2.png").convert_alpha()
+playerWalk_1 = pygame.image.load("assets/player/player_walk_1.png").convert_alpha()
+playerWalk_2 = pygame.image.load("assets/player/player_walk_2.png").convert_alpha()
 playerWalk = [playerWalk_1, playerWalk_2]
 playerIndex = 0
 playerJump = pygame.image.load("assets/player/player_jump.png").convert_alpha()
 
 playerSur = playerWalk[playerIndex]
 playerBox = playerSur.get_rect(midbottom=(75, 300))
-playerStand = pygame.image.load(
-    'assets/player/player_stand.png').convert_alpha()
+playerStand = pygame.image.load("assets/player/player_stand.png").convert_alpha()
 playerStand = pygame.transform.rotozoom(playerStand, 0, 2)
 playerStandBox = playerStand.get_rect(center=(400, 200))
 
@@ -125,11 +121,12 @@ while True:
             if event.type == customEventTimer:
                 if randint(0, 2):
                     enemyList.append(
-                        snailSur.get_rect(bottomleft=(randint(800, 1100),
-                                                      300)))
+                        snailSur.get_rect(bottomleft=(randint(800, 1100), 300))
+                    )
                 else:
                     enemyList.append(
-                        flySur.get_rect(bottomleft=(randint(1200, 1600), 175)))
+                        flySur.get_rect(bottomleft=(randint(1200, 1600), 175))
+                    )
             if event.type == snailEventTimer and flyEventTimer:
                 if snailFrameIndex == 0 and flyFrameIndex == 0:
                     snailFrameIndex = 1
@@ -163,7 +160,7 @@ while True:
         screen.fill(mainColor)
         screen.blit(playerStand, playerStandBox)
         screen.blit(titleText, titleTextBox)
-        finalScoreText = font.render(f'Score: {finalScore}', False, scoreColor)
+        finalScoreText = font.render(f"Score: {finalScore}", False, scoreColor)
         finalScoreBox = finalScoreText.get_rect(center=(400, 325))
         if finalScore > 0:
             instructionTextBox.y = 350
